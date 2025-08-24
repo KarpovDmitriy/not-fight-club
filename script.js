@@ -63,6 +63,9 @@ function addCharacterName(e) {
 
     if (characterName) {
         localStorage.setItem("username", characterName);
+        nameSpan.textContent = `Player Name: ${characterName}`;
+        nameInput.value = characterName;
+
         welcomeSection.innerText = "Main";
 
         showHeader();
@@ -120,6 +123,7 @@ function openSettings(e) {
     e.preventDefault();
     welcomeSection.innerText = "Settings";
 
+    hideRegistrationSection();
     hideCharacterSection();
     hideHomePageSection();
     showSettingsSection();
