@@ -3,19 +3,52 @@ let userName = localStorage.getItem("username");
 const characterList = document.querySelector(".character-list");
 const selectedCharacter = document.querySelector(".selected-character");
 const characterSelectSection = document.querySelector(".character-select");
+const welcomeSection = document.getElementById("welcome-message");
+
+const nameSpan = document.querySelector(".player-name");
+const nameInput = document.querySelector(".player-input");
+const editButton = document.querySelector(".edit-btn");
 
 characterList.addEventListener("click", handleCharacterClick);
 
 if (userName) {
-    document.getElementById("welcome-message").innerText = `${userName}`;
-
     showHeader();
     hideRegistrationSection();
     showHomePageSection();
+
+    nameSpan.textContent = `Player Name: ${userName}`;
+    nameInput.value = userName;
 }
 
 document.getElementById("add-name-button").addEventListener("click", addCharacterName);
 document.getElementById("fight-button").addEventListener("click", startFight);
+document.getElementById("home-icon").addEventListener("click", openMain);
+document.getElementById("character-icon").addEventListener("click", openCharacter);
+document.getElementById("settings-icon").addEventListener("click", openSettings);
+
+editButton.addEventListener("click", toggleEditMode);
+nameInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        toggleEditMode();
+    }
+});
+
+function toggleEditMode() {
+    if (editButton.textContent === "Edit") {
+        nameSpan.style.display = "none";
+        nameInput.style.display = "inline";
+        nameInput.focus();
+        editButton.textContent = "Save";
+    } else {
+        userName = nameInput.value;
+        localStorage.setItem("username", userName);
+
+        nameSpan.textContent = `Player Name: ${userName}`;
+        nameSpan.style.display = "inline";
+        nameInput.style.display = "none";
+        editButton.textContent = "Edit";
+    }
+}
 
 function startFight(e) {
     e.preventDefault();
@@ -30,14 +63,14 @@ function addCharacterName(e) {
 
     if (characterName) {
         localStorage.setItem("username", characterName);
-        document.getElementById("welcome-message").innerText = `${characterName}`;
+        welcomeSection.innerText = "Main";
 
         showHeader();
         hideRegistrationSection();
         showHomePageSection();
 
     } else {
-        document.getElementById("welcome-message").innerText = "";
+        welcomeSection.innerText = "";
     }
 }
 
@@ -46,11 +79,11 @@ function handleCharacterClick(e) {
         const selectedImg = e.target.cloneNode();
         selectedCharacter.innerHTML = "";
 
-        const infoText = document.createElement("p");
-        infoText.textContent = "Selected character:";
-        infoText.classList.add("title-text");
+        const titleText = document.createElement("p");
+        titleText.textContent = "Selected character:";
+        titleText.classList.add("title-text");
 
-        selectedCharacter.appendChild(infoText);
+        selectedCharacter.appendChild(titleText);
         selectedCharacter.appendChild(selectedImg);
 
         characterSelectSection.classList.add("hidden");
@@ -60,6 +93,36 @@ function handleCharacterClick(e) {
             selectedCharacter.innerHTML = "";
         });
     }
+}
+
+function openMain(e) {
+    e.preventDefault();
+    welcomeSection.innerText = "Main";
+
+    hideRegistrationSection();
+    hideCharacterSection();
+    hideSettingsSection();
+    showHomePageSection();
+}
+
+function openCharacter(e) {
+    e.preventDefault();
+    welcomeSection.innerText = "Character";
+
+    hideRegistrationSection();
+    hideHomePageSection();
+    hideSettingsSection();
+
+    showCharacterSection();
+}
+
+function openSettings(e) {
+    e.preventDefault();
+    welcomeSection.innerText = "Settings";
+
+    hideCharacterSection();
+    hideHomePageSection();
+    showSettingsSection();
 }
 
 function showHomePageSection() {
@@ -85,4 +148,19 @@ function hideRegistrationSection() {
 function showCharacterSection() {
     const characterSection = document.querySelector(".character-section");
     characterSection.classList.remove("hidden");
+}
+
+function hideCharacterSection() {
+    const characterSection = document.querySelector(".character-section");
+    characterSection.classList.add("hidden");
+}
+
+function showSettingsSection() {
+    const settingsSection = document.querySelector(".settings-section");
+    settingsSection.classList.remove("hidden");
+}
+
+function hideSettingsSection() {
+    const settingsSection = document.querySelector(".settings-section");
+    settingsSection.classList.add("hidden");
 }

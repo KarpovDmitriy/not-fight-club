@@ -46,7 +46,7 @@ body {
 
 .main {
     /* position: relative; */
-    height: 93vh;
+    height: 90vh;
 }
 
 .registration-section {
@@ -124,47 +124,64 @@ input[type="text"]:focus {
 }
 
 .character-list {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .character {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
-  cursor: pointer;
-  position: relative;
-  transition: 0.3s ease;
-  border-radius: 6px;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    cursor: pointer;
+    position: relative;
+    transition: 0.3s ease;
+    border-radius: 6px;
 }
 
 .character:hover {
-  filter: brightness(0.7);
+    filter: brightness(0.6);
 }
 
 .character::after {
-  content: "✏️";
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  opacity: 0;
-  transition: 0.3s ease;
-  font-size: 18px;
+    content: "✏️";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    opacity: 0;
+    transition: 0.3s ease;
+    font-size: 18px;
 }
 
 .character:hover::after {
-  opacity: 1;
+    opacity: 1;
 }
 
 .selected-character img {
-  width: 300px;
-  height: 300px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease;
+    width: 300px;
+    height: 300px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
 }
 
 .selected-character img:hover {
-  filter: brightness(0.8);
+    filter: brightness(0.8);
+}
+
+.player-info {
+    margin-top: 15px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.player-info .player-input {
+    width: 14%;
+    margin: 5px 0;
+    margin-right: 10px;
+}
+
+.player-name{
+    margin-right: 10px;
 }

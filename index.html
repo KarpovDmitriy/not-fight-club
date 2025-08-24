@@ -19,18 +19,18 @@
 <body>
     <header class="header hidden">
         <div class="header-left-side">
-            <p class="title-text" id="welcome-message"></p>
+            <p class="title-text" id="welcome-message">Main</p>
         </div>
         <nav class="nav">
             <ul class="nav-list">
                 <li class="nav-item">
-                    <img class="header-icon" src="assets/img/home-icon.png" alt="home icon">
+                    <img class="header-icon" id="home-icon" src="assets/img/home-icon.png" alt="home icon">
                 </li>
                 <li class="nav-item">
-                    <img class="header-icon" src="assets/img/user-icon.png" alt="character icon">
+                    <img class="header-icon" id="character-icon" src="assets/img/user-icon.png" alt="character icon">
                 </li>
                 <li class="nav-item">
-                    <img class="header-icon" src="assets/img/grid-icon.png" alt="settings icon">
+                    <img class="header-icon" id="settings-icon" src="assets/img/grid-icon.png" alt="settings icon">
                 </li>
             </ul>
         </nav>
@@ -64,6 +64,14 @@
             </div>
 
             <div class="selected-character">
+            </div>
+        </section>
+
+        <section class="settings-section hidden">
+            <div class="player-info">
+                <span class="player-name title-text">Player Name:</span>
+                <input type="text" class="player-input" style="display:none">
+                <button class="edit-btn button button-small">Edit</button>
             </div>
         </section>
     </main>
