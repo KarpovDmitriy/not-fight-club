@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.header {
+    border-bottom: 3px solid gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 7vh;
+}
+
+body {
+    max-width: 1920px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+.title-text {
+    color: black;
+    font-family: 'Forum', serif;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+}
+
+.header-icon {
+    cursor: pointer;
+}
+
+.main {
+    /* position: relative; */
+    height: 93vh;
+}
+
+.create-character-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    /* position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); */
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #333;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cce4f7;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    margin: 15px 0;
+}
+
+input[type="text"]:focus {
+    border-color: #99c8f5;
+    outline: none;
+    box-shadow: 0 0 4px rgba(153, 200, 245, 0.5);
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #e0e0e0;
+}
