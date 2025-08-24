@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <header class="header">
+    <header class="header hidden">
         <div class="header-left-side">
             <p class="title-text" id="welcome-message"></p>
         </div>
@@ -37,14 +37,33 @@
     </header>
 
     <main class="main">
-        <section class="create-character-section">
-            <div class="create-character">
+        <section class="registration-section">
+            <div>
                 <p class="title-text">Create your character</p>
 
                 <form action="">
                     <input type="text" id="character-name" name="character-name" placeholder="Type your name here...">
-                    <input type="submit" value="Create Character" id="add-name-button">
+                    <input type="submit" value="Create Character" class="button" id="add-name-button">
                 </form>
+            </div>
+        </section>
+
+        <section class="home-page-section hidden">
+            <input type="submit" value="Fight!" class="button button-small" id="fight-button">
+        </section>
+
+        <section class="character-section hidden">
+            <div class="character-select">
+                <div class="character-list">
+                    <img src="assets/img/king.png" alt="Character 1" class="character">
+                    <img src="assets/img/hunter.png" alt="Character 2" class="character">
+                    <img src="assets/img/monster.png" alt="Character 3" class="character">
+                    <img src="assets/img/robber.png" alt="Character 4" class="character">
+                    <img src="assets/img/warrior.png" alt="Character 5" class="character">
+                </div>
+            </div>
+
+            <div class="selected-character">
             </div>
         </section>
     </main>
