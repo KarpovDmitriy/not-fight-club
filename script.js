@@ -1,24 +1,10 @@
-let userName = localStorage.getItem("username");
-
 const characterList = document.querySelector(".character-list");
 const selectedCharacter = document.querySelector(".selected-character");
 const characterSelectSection = document.querySelector(".character-select");
 const welcomeSection = document.getElementById("welcome-message");
-
 const nameSpan = document.querySelector(".player-name");
 const nameInput = document.querySelector(".player-input");
 const editButton = document.querySelector(".edit-btn");
-
-characterList.addEventListener("click", handleCharacterClick);
-
-if (userName) {
-    showHeader();
-    hideRegistrationSection();
-    showHomePageSection();
-
-    nameSpan.textContent = `Player Name: ${userName}`;
-    nameInput.value = userName;
-}
 
 document.getElementById("add-name-button").addEventListener("click", addCharacterName);
 document.getElementById("fight-button").addEventListener("click", startFight);
@@ -26,12 +12,61 @@ document.getElementById("home-icon").addEventListener("click", openMain);
 document.getElementById("character-icon").addEventListener("click", openCharacter);
 document.getElementById("settings-icon").addEventListener("click", openSettings);
 
+characterList.addEventListener("click", handleCharacterClick);
 editButton.addEventListener("click", toggleEditMode);
 nameInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         toggleEditMode();
     }
 });
+
+const characterImages = document.querySelectorAll(".character-list img");
+let charactersData = JSON.parse(localStorage.getItem("characters")) || [];
+
+if (charactersData.length === 0) {
+    charactersData = Array.from(characterImages).map(img => ({
+        src: img.getAttribute("src"),
+        selected: false,
+        wins: 0,
+        losses: 0
+    }));
+    localStorage.setItem("characters", JSON.stringify(charactersData));
+}
+
+function saveCharactersData() {
+    localStorage.setItem("characters", JSON.stringify(charactersData));
+}
+
+characterImages.forEach(img => {
+    img.addEventListener("click", () => {
+        selectCharacter(img.getAttribute("src"));
+    });
+});
+
+let userName = localStorage.getItem("username");
+if (userName) {
+    showHeader();
+    hideRegistrationSection();
+    showHomePageSection();
+
+    const selectedCharacter = charactersData.find(char => char.selected);
+    if (selectedCharacter) {
+        addSelectedCharacter(selectedCharacter);
+    } else {
+        alert("Ни один персонаж не выбран");
+    }
+
+    nameSpan.textContent = `Player Name: ${userName}`;
+    nameInput.value = userName;
+}
+
+function selectCharacter(src) {
+    charactersData = charactersData.map(char => ({
+        ...char,
+        selected: char.src === src
+    }));
+    saveCharactersData();
+}
 
 function toggleEditMode() {
     if (editButton.textContent === "Edit") {
@@ -54,6 +89,9 @@ function startFight(e) {
     e.preventDefault();
     hideHomePageSection();
     showCharacterSection();
+
+    // if we have selected character then start playing
+    // if not then we need to choose one from the list
 }
 
 function addCharacterName(e) {
@@ -79,23 +117,62 @@ function addCharacterName(e) {
 
 function handleCharacterClick(e) {
     if (e.target.classList.contains("character")) {
-        const selectedImg = e.target.cloneNode();
-        selectedCharacter.innerHTML = "";
+        const imgSrc = e.target.getAttribute("src");
+        selectCharacter(imgSrc);
 
-        const titleText = document.createElement("p");
-        titleText.textContent = "Selected character:";
-        titleText.classList.add("title-text");
-
-        selectedCharacter.appendChild(titleText);
-        selectedCharacter.appendChild(selectedImg);
+        const selectedCharacter = charactersData.find(char => char.selected);
+        addSelectedCharacter(selectedCharacter);
 
         characterSelectSection.classList.add("hidden");
-
-        selectedImg.addEventListener("click", () => {
-            characterSelectSection.classList.remove("hidden");
-            selectedCharacter.innerHTML = "";
-        });
     }
+}
+
+function addSelectedCharacter(imgObject) {
+    const selectedImg = document.createElement("img");
+    selectedImg.src = imgObject.src;
+    selectedImg.classList.add("character");
+
+    const titleText = document.createElement("p");
+    titleText.textContent = "Selected character:";
+    titleText.classList.add("title-text");
+
+    selectedCharacter.innerHTML = "";
+    selectedCharacter.appendChild(titleText);
+    addWinsLossesText(imgObject.wins, imgObject.losses);
+    selectedCharacter.appendChild(selectedImg);
+
+    selectedImg.addEventListener("click", () => {
+        selectedCharacter.innerHTML = "";
+        characterSelectSection.classList.remove("hidden");
+
+        charactersData = charactersData.map(char => ({
+            ...char,
+            selected: false
+        }));
+
+        saveCharactersData();
+    });
+}
+
+function addWinsLossesText(wins, losses) {
+    const statsDiv = document.createElement("div");
+    statsDiv.classList.add("stats");
+
+    const winsSpan = document.createElement("span");
+    winsSpan.classList.add("wins");
+    winsSpan.textContent = `Wins: ${wins}`;
+
+    const separator = document.createTextNode(" | ");
+
+    const lossesSpan = document.createElement("span");
+    lossesSpan.classList.add("losses");
+    lossesSpan.textContent = `Losses: ${losses}`;
+
+    statsDiv.appendChild(winsSpan);
+    statsDiv.appendChild(separator);
+    statsDiv.appendChild(lossesSpan);
+
+    selectedCharacter.appendChild(statsDiv);
 }
 
 function openMain(e) {
@@ -117,6 +194,14 @@ function openCharacter(e) {
     hideSettingsSection();
 
     showCharacterSection();
+
+    const selectedCharacter = charactersData.find(char => char.selected);
+    if (selectedCharacter) {
+        characterSelectSection.classList.add("hidden");
+        addSelectedCharacter(selectedCharacter);
+    } else {
+        characterSelectSection.classList.remove("hidden");
+    }
 }
 
 function openSettings(e) {

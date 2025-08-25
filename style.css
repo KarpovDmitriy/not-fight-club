@@ -140,6 +140,7 @@ input[type="text"]:focus {
 
 .character:hover {
     filter: brightness(0.6);
+    transform: scale(1.07);
 }
 
 .character::after {
@@ -182,6 +183,23 @@ input[type="text"]:focus {
     margin-right: 10px;
 }
 
-.player-name{
+.player-name {
     margin-right: 10px;
+}
+
+.stats {
+    font-size: 18px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.wins {
+    color: green;
+    font-weight: bold;
+}
+
+.losses {
+    color: red;
+    font-weight: bold;
 }
