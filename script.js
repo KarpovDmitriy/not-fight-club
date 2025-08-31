@@ -1,8 +1,44 @@
+// Fight zone elements:
+let player = {
+    name: localStorage.getItem("username") || "Player",
+    health: 150,
+    baseDamage: 15,
+    critChance: 0.25,
+    critMultiplier: 1.5
+};
+
+let enemy = null;
+
+const zones = ["Head", "Neck", "Body", "Belly", "Legs"];
+const battleLogs = [];
+
+const playerNameEl = document.querySelector(".player-name");
+const playerImgEl = document.querySelector(".player-img");
+const playerHealthEl = document.querySelector(".player-health");
+const enemyNameEl = document.querySelector(".enemy-name");
+const enemyImgEl = document.querySelector(".enemy-img");
+const enemyHealthEl = document.querySelector(".enemy-health");
+const attackRadios = document.querySelectorAll('input[name="attack"]');
+const defenseCheckboxes = document.querySelectorAll('input[name="defense"]');
+let gameOver = false;
+
+const attackButton = document.querySelector(".attack-button");
+const newGameButton = document.querySelector(".new-game-button");
+const resultMessageEl = document.querySelector(".result-message");
+const logList = document.querySelector(".log-list");
+
+const enemyImages = [
+    { src: "assets/img/buffalo.png", name: "Buffalo", attackZonesCount: 1, defenseZonesCount: 2, baseDamage: 15 },
+    { src: "assets/img/dwarf.png", name: "Dwarf", attackZonesCount: 2, defenseZonesCount: 1, baseDamage: 10 },
+    { src: "assets/img/punisher.png", name: "Punisher", attackZonesCount: 3, defenseZonesCount: 1, baseDamage: 8 }
+];
+
+// Other sections elements
 const characterList = document.querySelector(".character-list");
 const selectedCharacter = document.querySelector(".selected-character");
 const characterSelectSection = document.querySelector(".character-select");
 const welcomeSection = document.getElementById("welcome-message");
-const nameSpan = document.querySelector(".player-name");
+const nameSpan = document.querySelector(".settings-player-name");
 const nameInput = document.querySelector(".player-input");
 const editButton = document.querySelector(".edit-btn");
 
@@ -33,8 +69,14 @@ if (charactersData.length === 0) {
     localStorage.setItem("characters", JSON.stringify(charactersData));
 }
 
-function saveCharactersData() {
-    localStorage.setItem("characters", JSON.stringify(charactersData));
+let userName = localStorage.getItem("username");
+if (userName) {
+    hideRegistrationSection();
+    showHeader();
+    showHomePageSection();
+
+    nameSpan.textContent = `Player Name: ${userName}`;
+    nameInput.value = userName;
 }
 
 characterImages.forEach(img => {
@@ -43,29 +85,16 @@ characterImages.forEach(img => {
     });
 });
 
-let userName = localStorage.getItem("username");
-if (userName) {
-    showHeader();
-    hideRegistrationSection();
-    showHomePageSection();
-
-    const selectedCharacter = charactersData.find(char => char.selected);
-    if (selectedCharacter) {
-        addSelectedCharacter(selectedCharacter);
-    } else {
-        alert("Ни один персонаж не выбран");
-    }
-
-    nameSpan.textContent = `Player Name: ${userName}`;
-    nameInput.value = userName;
-}
-
 function selectCharacter(src) {
     charactersData = charactersData.map(char => ({
         ...char,
         selected: char.src === src
     }));
     saveCharactersData();
+}
+
+function saveCharactersData() {
+    localStorage.setItem("characters", JSON.stringify(charactersData));
 }
 
 function toggleEditMode() {
@@ -87,11 +116,17 @@ function toggleEditMode() {
 
 function startFight(e) {
     e.preventDefault();
-    hideHomePageSection();
-    showCharacterSection();
 
-    // if we have selected character then start playing
-    // if not then we need to choose one from the list
+    const selectedCharacter = charactersData.find(char => char.selected);
+    if (selectedCharacter) {
+        hideHomePageSection();
+        playerImgEl.src = selectedCharacter.src;
+        playerNameEl.textContent = localStorage.getItem("username");
+        player.name = localStorage.getItem("username");
+        document.querySelector(".battle-section").style.display = "flex";
+    } else {
+        alert("Select your character!");
+    }
 }
 
 function addCharacterName(e) {
@@ -109,7 +144,6 @@ function addCharacterName(e) {
         showHeader();
         hideRegistrationSection();
         showHomePageSection();
-
     } else {
         welcomeSection.innerText = "";
     }
@@ -120,7 +154,8 @@ function handleCharacterClick(e) {
         const imgSrc = e.target.getAttribute("src");
         selectCharacter(imgSrc);
 
-        const selectedCharacter = charactersData.find(char => char.selected);
+        const actualCharacterData = JSON.parse(localStorage.getItem("characters"));
+        const selectedCharacter = actualCharacterData.find(char => char.selected);
         addSelectedCharacter(selectedCharacter);
 
         characterSelectSection.classList.add("hidden");
@@ -145,7 +180,9 @@ function addSelectedCharacter(imgObject) {
         selectedCharacter.innerHTML = "";
         characterSelectSection.classList.remove("hidden");
 
-        charactersData = charactersData.map(char => ({
+        const actualCharactersData = JSON.parse(localStorage.getItem("characters"));
+
+        charactersData = actualCharactersData.map(char => ({
             ...char,
             selected: false
         }));
@@ -182,6 +219,7 @@ function openMain(e) {
     hideRegistrationSection();
     hideCharacterSection();
     hideSettingsSection();
+    document.querySelector(".battle-section").style.display = "none";
     showHomePageSection();
 }
 
@@ -192,10 +230,12 @@ function openCharacter(e) {
     hideRegistrationSection();
     hideHomePageSection();
     hideSettingsSection();
+    document.querySelector(".battle-section").style.display = "none";
 
     showCharacterSection();
 
-    const selectedCharacter = charactersData.find(char => char.selected);
+    const actualCharacterData = JSON.parse(localStorage.getItem("characters"));
+    const selectedCharacter = actualCharacterData.find(char => char.selected);
     if (selectedCharacter) {
         characterSelectSection.classList.add("hidden");
         addSelectedCharacter(selectedCharacter);
@@ -211,6 +251,8 @@ function openSettings(e) {
     hideRegistrationSection();
     hideCharacterSection();
     hideHomePageSection();
+    document.querySelector(".battle-section").style.display = "none";
+
     showSettingsSection();
 }
 
@@ -253,3 +295,250 @@ function hideSettingsSection() {
     const settingsSection = document.querySelector(".settings-section");
     settingsSection.classList.add("hidden");
 }
+
+function showBattleSection() {
+    const fightSection = document.querySelector(".battle-section");
+    fightSection.classList.remove("hidden");
+}
+
+function hideBattleSection() {
+    const fightSection = document.querySelector(".battle-section");
+    fightSection.classList.add("hidden");
+}
+
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function pickRandomEnemy() {
+    const randomIndex = Math.floor(Math.random() * enemyImages.length);
+    const picked = enemyImages[randomIndex];
+    enemy = {
+        name: picked.name,
+        src: picked.src,
+        health: 150,
+        baseDamage: picked.baseDamage,
+        critChance: 0.18,
+        critMultiplier: 1.5,
+        attackZonesCount: picked.attackZonesCount,
+        defenseZonesCount: picked.defenseZonesCount
+    };
+}
+
+function getRandomZones(count) {
+    const shuffled = [...zones].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+function calculateDamage(attacker, defender, attackZones, defenseZones) {
+    let totalDamage = 0;
+    const logs = [];
+    attackZones.forEach(zone => {
+        const isBlocked = defenseZones.includes(zone);
+        const isCrit = Math.random() < attacker.critChance;
+        let damage = 0;
+        if (isBlocked) damage = isCrit ? attacker.baseDamage * attacker.critMultiplier : 0;
+        else damage = isCrit ? attacker.baseDamage * attacker.critMultiplier : attacker.baseDamage;
+        totalDamage += damage;
+        logs.push({
+            attacker: attacker.name,
+            defender: defender.name,
+            zone,
+            damage: Math.round(damage),
+            crit: isCrit
+        });
+    });
+    return { totalDamage, logs };
+}
+
+function updateHealthBars() {
+    const playerPercent = Math.max(0, player.health) / 150 * 100;
+    const enemyPercent = Math.max(0, enemy.health) / 150 * 100;
+
+    let playerColor = playerPercent < 30 ? "darkred" : "red";
+    let enemyColor = enemyPercent < 30 ? "darkred" : "red";
+
+    playerHealthEl.innerHTML = `<div class="player-health-fill" style="width: ${playerPercent}%; background-color: ${playerColor}">${Math.max(0, player.health)}/150</div>`;
+    enemyHealthEl.innerHTML = `<div class="enemy-health-fill" style="width: ${enemyPercent}%; background-color: ${enemyColor}">${Math.max(0, enemy.health)}/150</div>`;
+}
+
+function renderBattleLogs() {
+    logList.innerHTML = "";
+
+    battleLogs.forEach(entry => {
+        const p = document.createElement("p");
+        const attackerColor = entry.attacker === player.name ? "green" : "red";
+        const defenderColor = entry.defender === player.name ? "green" : "red";
+        const damageColor = "blue";
+        const zoneColor = "blue";
+
+        if (entry.crit) {
+            p.innerHTML = `<span style="color:${attackerColor}; font-weight:bold">${entry.attacker.toUpperCase()}</span> attacked 
+                <span style="color:${defenderColor}; font-weight:bold">${entry.defender.toUpperCase()}</span> in 
+                <span style="color:${zoneColor}">${entry.zone.toUpperCase()}</span> and dealt 
+                <span style="color:${damageColor}; font-weight:bold">${entry.damage}</span> damage <strong>(CRIT!)</strong>`;
+        } else {
+            p.innerHTML = `<span style="color:${attackerColor}; font-weight:bold">${entry.attacker.toUpperCase()}</span> attacked 
+                <span style="color:${defenderColor}; font-weight:bold">${entry.defender.toUpperCase()}</span> in 
+                <span style="color:${zoneColor}">${entry.zone.toUpperCase()}</span> and dealt 
+                <span style="color:${damageColor}">${entry.damage}</span> damage`;
+        }
+
+        logList.appendChild(p);
+    });
+    logList.scrollTop = logList.scrollHeight;
+}
+
+function saveBattleState() {
+    localStorage.setItem("battleState", JSON.stringify({
+        player,
+        enemy,
+        battleLogs,
+        gameOver,
+        resultMessage: resultMessageEl?.textContent || ""
+    }));
+}
+
+function loadBattleState() {
+    const state = JSON.parse(localStorage.getItem("battleState"));
+    if (state) {
+        player = state.player;
+        enemy = state.enemy;
+        battleLogs.push(...state.battleLogs);
+    }
+}
+
+function initBattle() {
+    const savedState = JSON.parse(localStorage.getItem("battleState"));
+
+    if (savedState && savedState.enemy) {
+        enemy = savedState.enemy;
+    } else {
+        pickRandomEnemy();
+    }
+
+    enemyImgEl.src = enemy.src;
+    enemyNameEl.innerText = enemy.name;
+    playerNameEl.innerText = player.name;
+
+    const selectedCharacter = charactersData.find(char => char.selected);
+
+    if (selectedCharacter) {
+        playerImgEl.src = selectedCharacter.src;
+    }
+
+    updateHealthBars();
+    renderBattleLogs();
+}
+
+function checkZonesSelection() {
+    if (gameOver) {
+        attackButton.disabled = true;
+        return;
+    }
+    const attackSelected = document.querySelector('input[name="attack"]:checked');
+    const defenseSelected = document.querySelectorAll('input[name="defense"]:checked');
+    attackButton.disabled = !(attackSelected && defenseSelected.length === 2);
+}
+
+function attackHandler() {
+    if (gameOver) return;
+
+    const playerAttack = [document.querySelector('input[name="attack"]:checked').value];
+    const playerDefense = Array.from(document.querySelectorAll('input[name="defense"]:checked')).map(el => el.value);
+
+    const enemyAttack = getRandomZones(enemy.attackZonesCount);
+    const enemyDefense = getRandomZones(enemy.defenseZonesCount);
+
+    const playerResult = calculateDamage(player, enemy, playerAttack, enemyDefense);
+    const enemyResult = calculateDamage(enemy, player, enemyAttack, playerDefense);
+
+    player.health = Math.max(0, player.health - enemyResult.totalDamage);
+    enemy.health = Math.max(0, enemy.health - playerResult.totalDamage);
+
+    battleLogs.push(...playerResult.logs, ...enemyResult.logs);
+
+    updateHealthBars();
+    renderBattleLogs();
+
+    if (enemy.health <= 0 && player.health <= 0) {
+        endBattle("draw");
+    } else if (enemy.health <= 0) {
+        endBattle("win");
+    } else if (player.health <= 0) {
+        endBattle("lose");
+    } else {
+        saveBattleState();
+    }
+
+    checkZonesSelection();
+}
+
+function endBattle(result) {
+    gameOver = true;
+    attackButton.disabled = true;
+
+    let msg = "";
+    if (result === "win") msg = "Victory! You win!";
+    if (result === "lose") msg = "Defeat! You lose!";
+    if (result === "draw") msg = "Draw!";
+
+    resultMessageEl.textContent = msg;
+    resultMessageEl.classList.remove("win", "lose", "draw");
+    resultMessageEl.classList.add(result);
+
+    if (result === "win" || result === "lose") {
+        try {
+            const raw = localStorage.getItem("characters");
+            if (raw) {
+                const list = JSON.parse(raw);
+                const idx = list.findIndex(c => c.selected === true);
+                if (idx !== -1) {
+                    if (result === "win") list[idx].wins = (list[idx].wins || 0) + 1;
+                    if (result === "lose") list[idx].losses = (list[idx].losses || 0) + 1;
+                    localStorage.setItem("characters", JSON.stringify(list));
+                }
+            }
+        } catch (e) {
+            console.warn("Failed to update charactersData:", e);
+        }
+    }
+
+    saveBattleState();
+}
+
+
+attackRadios.forEach(r => r.addEventListener("change", checkZonesSelection));
+defenseCheckboxes.forEach(c => c.addEventListener("change", checkZonesSelection));
+attackButton.addEventListener("click", attackHandler);
+
+loadBattleState();
+initBattle();
+
+
+function resetBattle() {
+    gameOver = false;
+    resultMessageEl.textContent = "";
+    resultMessageEl.classList.remove("win", "lose", "draw");
+
+    player.health = 150;
+    enemy.health = 150;
+
+    pickRandomEnemy();
+    enemyImgEl.src = enemy.src;
+    enemyNameEl.textContent = enemy.name;
+
+    battleLogs.length = 0;
+    renderBattleLogs();
+    updateHealthBars();
+
+    const checkedAttack = document.querySelector('input[name="attack"]:checked');
+    if (checkedAttack) checkedAttack.checked = false;
+    document.querySelectorAll('input[name="defense"]:checked').forEach(cb => cb.checked = false);
+
+    checkZonesSelection();
+    saveBattleState();
+}
+
+newGameButton.addEventListener("click", resetBattle);

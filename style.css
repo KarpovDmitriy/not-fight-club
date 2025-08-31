@@ -45,7 +45,6 @@ body {
 }
 
 .main {
-    /* position: relative; */
     height: 90vh;
 }
 
@@ -54,11 +53,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
-
-    /* position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%); */
 }
 
 .home-page-section {
@@ -202,4 +196,174 @@ input[type="text"]:focus {
 .losses {
     color: red;
     font-weight: bold;
+}
+
+
+.battle-section {
+  display: none; 
+  margin-top: 50px;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+.battle-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 30px;
+}
+
+.player-block,
+.enemy-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.player-name,
+.enemy-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.player-img,
+.enemy-img {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+.player-img:hover,
+.enemy-img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.health-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  text-align: center;
+  line-height: 20px;
+}
+
+.player-health-fill,
+.enemy-health-fill {
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  line-height: 20px;
+  transition: width 0.5s, background-color 0.5s;
+  border-radius: 5px;
+}
+
+.battle-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0 30px;
+}
+
+.battle-actions p {
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.zones-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.zone-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.divider {
+  font-weight: bold;
+  margin: 0 5px;
+}
+
+.buttons-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.attack-button,
+.new-game-button {
+  padding: 10px 20px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.attack-button:hover:enabled,
+.new-game-button:hover:enabled {
+  background-color: #bbb;
+}
+
+.attack-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.result-message {
+  margin-top: 10px;
+  min-height: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+.result-message.win   { color: #2e7d32; } 
+.result-message.lose  { color: #c62828; }
+.result-message.draw  { color: #ef6c00; }
+
+
+.battle-log {
+  width: 100%;
+  max-width: 1000px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-height: 250px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+.battle-log .log-list p {
+  margin: 5px 0;
+}
+.battle-log .log-list p span.crit {
+  color: orange;
+  font-weight: bold;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin-left: 5px;
+  margin-right: 5px;
+  cursor: pointer;
 }

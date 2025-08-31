@@ -69,9 +69,75 @@
 
         <section class="settings-section hidden">
             <div class="player-info">
-                <span class="player-name title-text">Player Name:</span>
+                <span class="settings-player-name title-text">Player Name:</span>
                 <input type="text" class="player-input" style="display:none">
                 <button class="edit-btn button button-small">Edit</button>
+            </div>
+        </section>
+
+
+
+
+
+        <section class="battle-section">
+            <div class="battle-container">
+                <!-- Игрок -->
+                <div class="player-block">
+                    <p class="player-name"></p>
+                    <img class="player-img" src="" alt="Player">
+                    <p class="health-bar player-health">150/150</p>
+                </div>
+
+                <!-- Центр: выбор атак и защит -->
+                <div class="battle-actions">
+                    <p>Please pick 1 attack zone and 2 defense zones:</p>
+                    <div class="zones-table">
+                        <div class="zone-row">
+                            <label>Head <input type="radio" name="attack" value="Head"></label>
+                            <span class="divider">|</span>
+                            <label><input type="checkbox" name="defense" value="Head"> Head</label>
+                        </div>
+                        <div class="zone-row">
+                            <label>Neck <input type="radio" name="attack" value="Neck"></label>
+                            <span class="divider">|</span>
+                            <label><input type="checkbox" name="defense" value="Neck"> Neck</label>
+                        </div>
+                        <div class="zone-row">
+                            <label>Body <input type="radio" name="attack" value="Body"></label>
+                            <span class="divider">|</span>
+                            <label><input type="checkbox" name="defense" value="Body"> Body</label>
+                        </div>
+                        <div class="zone-row">
+                            <label>Belly <input type="radio" name="attack" value="Belly"></label>
+                            <span class="divider">|</span>
+                            <label><input type="checkbox" name="defense" value="Belly"> Belly</label>
+                        </div>
+                        <div class="zone-row">
+                            <label>Legs <input type="radio" name="attack" value="Legs"></label>
+                            <span class="divider">|</span>
+                            <label><input type="checkbox" name="defense" value="Legs"> Legs</label>
+                        </div>
+                    </div>
+                    <div class="buttons-row">
+                        <button class="attack-button" disabled>ATTACK</button>
+                        <button class="new-game-button" type="button">NEW GAME</button>
+                    </div>
+
+                    <p class="result-message" aria-live="polite"></p>
+                </div>
+
+                <!-- Противник -->
+                <div class="enemy-block">
+                    <p class="enemy-name"></p>
+                    <img class="enemy-img" src="" alt="Enemy">
+                    <p class="health-bar enemy-health">150/150</p>
+                </div>
+            </div>
+
+            <!-- Лог боя -->
+            <div class="battle-log">
+                <h3>Battle Log:</h3>
+                <div class="log-list"></div>
             </div>
         </section>
     </main>
